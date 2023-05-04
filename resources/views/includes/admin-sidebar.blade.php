@@ -5,7 +5,7 @@
     <h3> Welcome Admin!</h3>
     
     <div  class="image-holder text-center">
-        <img src="/images/ME.jpg" alt="ME" title="Admin">
+        <img src="/images/ME.gif" alt="ME" title="Admin">
         <p>Catalin.J</p>
     </div>
     

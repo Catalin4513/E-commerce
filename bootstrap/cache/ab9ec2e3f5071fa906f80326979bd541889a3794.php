@@ -1,10 +1,12 @@
 <?php $__env->startSection('title', 'Product Categories'); ?>
+<?php $__env->startSection('data-page-id', 'adminCategories'); ?>
+
 
 <?php $__env->startSection('content'); ?>
 <div class="category">
 
     <div class="grid-x grid-padding-x">
-        <div class="cell medium-11">        
+        <div class="cell medium-11 cell">        
             <h2>Product Categories</h2> 
             <hr />
         </div>
@@ -39,7 +41,7 @@
     <div class="grid-x">
         <div class="small-12 medium-11 cell">
             <?php if(count($categories)): ?>
-            <table class="hover">
+            <table class="hover" data-form="deleteForm">
                 <tbody>
                     <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
@@ -47,8 +49,41 @@
                         <td><?php echo e($category['slug']); ?></td>
                         <td><?php echo e($category['added']); ?></td>
                         <td width="100" class="text-right">
-                            <a href="#"><i class="fa fa-edit"></i></a>
-                            <a href="#"><i class="fa fa-times"></i></a>
+                          <span> 
+                          <a data-open="item-<?php echo e($category['id']); ?>"><i class="fa fa-edit"></i></a>
+                          </span>
+                          <span style="display: inline-block">
+                            <form method="POST" action="/admin/product/categories/<?php echo e($category['id']); ?>/delete"
+                             class="delete-item"> 
+                            <input type="hidden" name="token" value="<?php echo e(\App\classes\CSRFToken::_token()); ?>">
+                            <button type="submit"><i class="fa fa-times delete"></i> </button>
+                            </form>
+                          </span>
+                            <!-- edit category modal  -->
+                                <div class="reveal" id="item-<?php echo e($category['id']); ?>"
+                                 data-reveal data-close-on-click="false" data-close-on-esc="false"
+                                 data-animation-in="scale-in-up" >
+
+                                 <div class="notification callout primary"></div>
+                                    <h2>Edit Category</h2>
+                                        <form >            
+                                        <div class="input-group">
+                                        <input type="text" id="item-name-<?php echo e($category['id']); ?>"
+                                         name="name" value="<?php echo e($category['name']); ?>">                
+                                        
+                                        <div >                    
+                                        <input type="submit" class="button update-category" 
+                                        id="<?php echo e($category['id']); ?>"
+                                        name="token" 
+                                        data-token="<?php echo e(\App\classes\CSRFToken::_token()); ?>"
+                                        value="Update">
+                                        </div>            
+                                        </div>
+                                        </form>  
+                                    <a href="/admin/product/categories" class="close-button"  aria-label="Close modal" type="button">
+                                        <span aria-hidden="true">&times;</span>
+                                    </a>
+                                </div>
                             
                         </td>
 
@@ -69,6 +104,8 @@
 
     </div>    
 </div>
+
+<?php echo $__env->make('includes.delete-modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                     
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layout.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

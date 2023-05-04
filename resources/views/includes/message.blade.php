@@ -1,4 +1,4 @@
-<div class="grid-x grid-padding-x">
+<div class="grid-x grid-padding-x" cell>
     <div class="cell medium-11">
     @if(isset($errors))
     <div class="callout alert" data-closable>
@@ -14,9 +14,13 @@
     </div>
     @endif
 
-        @if(isset($success))
+        @if(isset($success) || \App\classes\Session::has('success'))
             <div class="callout success" data-closable>
+                @if(isset($success))
                 {{ $success }}
+                @elseif(\App\classes\Session::has('success'))
+                {{\App\classes\Session::flash('success') }}
+                @endif
                 <button class="close-button" aria-label="Dismiss Message" type="button" data-close>
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -15,7 +15,7 @@
 
 
 </head>
-<body>
+<body data-page-id="@yield('data-page-id')">
     
 
 @include('includes.admin-sidebar')
