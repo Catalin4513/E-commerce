@@ -11935,7 +11935,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(42);
+module.exports = __webpack_require__(43);
 
 
 /***/ }),
@@ -11954,7 +11954,6 @@ __webpack_require__(37);
 
 //custom js files
 /*
-require('../../assets/js/admin/create');
 require('../../assets/js/admin/dashboard');
 require('../../assets/js/admin/events');
 require('../../assets/js/pages/cart');
@@ -11966,6 +11965,7 @@ __webpack_require__(38);
 __webpack_require__(39);
 __webpack_require__(40);
 __webpack_require__(41);
+__webpack_require__(42);
 
 /***/ }),
 /* 12 */
@@ -45759,45 +45759,89 @@ return src;
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($, jQuery) {(function () {
-  'use strict';
+    'use strict';
 
-  ACMESTORE.admin.update = function () {
+    ACMESTORE.admin.update = function () {
 
-    //update product category
+        //update product category
 
-    $(".update-category").on('click', function (e) {
+        $(".update-category").on('click', function (e) {
 
-      var token = $(this).data('token');
-      var id = $(this).attr('id');
-      var name = $("#item-name-" + id).val();
+            var token = $(this).data('token');
+            var id = $(this).attr('id');
+            var name = $("#item-name-" + id).val();
 
-      $.ajax({
-        type: 'POST',
-        url: '/admin/product/categories/' + id + '/edit',
-        data: { token: token, name: name },
-        success: function success(data) {
-          var response = jQuery.parseJSON(data);
-          $(".notification").css("display", 'block').removeClass("alert").addClass("primary").delay(4000).slideUp(300).html(response.success);
-        },
-        error: function error(request, _error) {
-          var errors = jQuery.parseJSON(request.responseText);
-          var ul = document.createElement('ul');
+            $.ajax({
+                type: 'POST',
+                url: '/admin/product/categories/' + id + '/edit',
+                data: { token: token, name: name },
+                success: function success(data) {
+                    var response = jQuery.parseJSON(data);
+                    $(".notification").css("display", 'block').removeClass("alert").addClass("primary").delay(4000).slideUp(300).html(response.success);
+                },
+                error: function error(request, _error) {
+                    var errors = jQuery.parseJSON(request.responseText);
+                    var ul = document.createElement('ul');
 
-          $.each(errors, function (key, value) {
+                    $.each(errors, function (key, value) {
 
-            var li = document.createElement('li');
+                        var li = document.createElement('li');
 
-            li.appendChild(document.createTextNode(value));
-            ul.appendChild(li);
-          });
+                        li.appendChild(document.createTextNode(value));
+                        ul.appendChild(li);
+                    });
 
-          $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
-        }
+                    $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
+                }
 
-      });
-      e.preventDefault();
-    });
-  };
+            });
+            e.preventDefault();
+        });
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        //update subcategory
+
+        $(".update-subcategory").on('click', function (e) {
+
+            var token = $(this).data('token');
+            var id = $(this).attr('id');
+            var category_id = $(this).data('category-id');
+            var name = $("#item-subcategory-name-" + id).val();
+            var selected_category_id = $('#item-category-' + category_id + ' option:selected').val();
+
+            if (category_id !== selected_category_id) {
+
+                category_id = selected_category_id;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/product/subcategory/' + id + '/edit',
+                data: { token: token, name: name, category_id: category_id },
+                success: function success(data) {
+                    var response = jQuery.parseJSON(data);
+                    $(".notification").css("display", 'block').removeClass("alert").addClass("primary").delay(4000).slideUp(300).html(response.success);
+                },
+                error: function error(request, _error2) {
+                    var errors = jQuery.parseJSON(request.responseText);
+                    var ul = document.createElement('ul');
+
+                    $.each(errors, function (key, value) {
+
+                        var li = document.createElement('li');
+
+                        li.appendChild(document.createTextNode(value));
+                        ul.appendChild(li);
+                    });
+
+                    $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
+                }
+
+            });
+            e.preventDefault();
+        });
+    };
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
 
@@ -45825,6 +45869,48 @@ return src;
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function($, jQuery) {(function () {
+    'use strict';
+
+    ACMESTORE.admin.create = function () {
+
+        //create product subcategory
+        $(".add-subcategory").on('click', function (e) {
+            var token = $(this).data('token');
+            var category_id = $(this).attr('id');
+            var name = $("#subcategory-name-" + category_id).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/product/subcategory/create',
+                data: { token: token, name: name, category_id: category_id },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function success(data) {
+                    var response = jQuery.parseJSON(data);
+                    $(".notification").css("display", 'block').removeClass('alert').addClass('primary').delay(4000).slideUp(300).html(response.success);
+                },
+                error: function error(request, _error) {
+                    var errors = jQuery.parseJSON(request.responseText);
+                    var ul = document.createElement('ul');
+                    $.each(errors, function (key, value) {
+                        var li = document.createElement('li');
+                        li.appendChild(document.createTextNode(value));
+                        ul.appendChild(li);
+                    });
+                    $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
+                }
+            });
+
+            e.preventDefault();
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function($) {(function () {
     'use strict';
 
@@ -45840,6 +45926,7 @@ return src;
             case 'adminCategories':
                 ACMESTORE.admin.update();
                 ACMESTORE.admin.delete();
+                ACMESTORE.admin.create();
                 break;
             default:
             // do nothing
@@ -45850,7 +45937,7 @@ return src;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

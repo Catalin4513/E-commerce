@@ -10,7 +10,6 @@ require('chart.js/dist/Chart.bundle');
 
 //custom js files
 /*
-require('../../assets/js/admin/create');
 require('../../assets/js/admin/dashboard');
 require('../../assets/js/admin/events');
 require('../../assets/js/pages/cart');
@@ -21,5 +20,6 @@ require('../../assets/js/pages/slider');*/
 require('../../assets/js/acme');
 require('../../assets/js/admin/update');
 require('../../assets/js/admin/delete');
+require('../../assets/js/admin/create');
 require('../../assets/js/init');
 
