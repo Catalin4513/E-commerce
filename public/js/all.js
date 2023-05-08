@@ -11935,7 +11935,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(43);
+module.exports = __webpack_require__(44);
 
 
 /***/ }),
@@ -11955,7 +11955,6 @@ __webpack_require__(37);
 //custom js files
 /*
 require('../../assets/js/admin/dashboard');
-require('../../assets/js/admin/events');
 require('../../assets/js/pages/cart');
 require('../../assets/js/pages/home_products');
 require('../../assets/js/pages/lib');
@@ -11966,6 +11965,7 @@ __webpack_require__(39);
 __webpack_require__(40);
 __webpack_require__(41);
 __webpack_require__(42);
+__webpack_require__(43);
 
 /***/ }),
 /* 12 */
@@ -45911,6 +45911,43 @@ return src;
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function($, jQuery) {(function () {
+
+    'use strict';
+
+    ACMESTORE.admin.changeEvent = function () {
+        $('#product-category').on('change', function () {
+
+            var category_id = $('#product-category' + ' option:selected').val();
+            $('#product-subcategory').html('Select Subcategory');
+
+            $.ajax({
+
+                type: 'GET',
+                url: '/admin/category/' + category_id + '/selected',
+                data: { category_id: category_id },
+                success: function success(response) {
+
+                    var subcategories = jQuery.parseJSON(response);
+                    if (subcategories.length) {
+                        $.each(subcategories, function (key, value) {
+
+                            $('#product-subcategory').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    } else {
+                        $('#product-subcategory').append('<option value="">No record found</option>');
+                    }
+                }
+            });
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function($) {(function () {
     'use strict';
 
@@ -45923,10 +45960,17 @@ return src;
         switch ($("body").data("page-id")) {
             case 'home':
                 break;
+
+            case 'adminProduct':
+                ACMESTORE.admin.changeEvent();
+                ACMESTORE.admin.delete();
+                break;
+
             case 'adminCategories':
                 ACMESTORE.admin.update();
                 ACMESTORE.admin.delete();
                 ACMESTORE.admin.create();
+
                 break;
             default:
             // do nothing
@@ -45937,7 +45981,7 @@ return src;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

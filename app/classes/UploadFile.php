@@ -104,7 +104,7 @@ return false;
 // @param $new_filename
 // @return  null/static
 
-    public static function move($temp_path, $folder, $file, $new_filename ){
+    public static function move($temp_path, $folder, $file, $new_filename = '' ){
 
         $fileObj = new static;
 
