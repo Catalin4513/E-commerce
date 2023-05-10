@@ -46007,6 +46007,15 @@ return src;
                         app.featured = response.data.featured;
                         app.loading = false;
                     });
+                },
+                stringLimit: function stringLimit(string, value) {
+                    if (string.length > value) {
+
+                        return string.substring(0, value) + '...';
+                    } else {
+
+                        return string;
+                    }
                 }
             },
 
