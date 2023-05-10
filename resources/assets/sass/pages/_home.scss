@@ -1,14 +1,86 @@
 .home{
 
+  //fixind pc styles to show like a normal one
+    .display-products {
+      white-space: nowrap;
+      overflow-x: auto;
+    }
 
-  padding-top: 3.8rem;
+    .display-products .cell {
+      display: inline-block;
+      vertical-align: top;
+      white-space: normal;
+      margin-right: 20px;
+      margin-left: 20px;
+      width: 20%;
+    }
 
-  @include breakpoint(small only){
-  
-    padding-top: 2.5rem;
-    
+  .card-section .button {
+    display: block;
+    margin-top: 10px;
   }
 
+  //fixind mobile
+  @include breakpoint(small only){
+
+    .display-products {
+      white-space: normal;
+      overflow-x: auto;
+    }
+
+    .display-products .cell {
+      display: block;
+      white-space: normal;
+      margin-right: 10px;
+      margin-left: 0px;
+      width: 100%;
+    }
+  }
+
+  //Displating for tablets
+  @media only screen and (min-width: 768px) and (max-width: 1023px) {
+
+    .display-products .cell {
+      margin-right: 20px;
+      margin-left: 10px;
+      width: 45%;
+    }
+
+    .card-section .button {
+      margin-top: 20px;
+    }
+
+    .display-products{
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .card{
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+
+      .card-section{
+        margin-bottom: 0.5rem;
+
+        img{
+          margin-left: 0;
+          border-radius: 0.5rem;
+          width: 300px !important;
+          height: 350px !important;
+        }
+      }
+    }
+  }
+
+
+  padding-top: 3.6rem;
+
+  //mobile view
+  @include breakpoint(small only){
+    padding-top: 2.5rem;
+  }
+
+  //general
   .hero{
     width: 100%;
     box-sizing: border-box;
@@ -16,6 +88,95 @@
     .hero-slider{
       img{
         width: 100% !important;
+      }
+    }
+  }
+  .display-products{
+    padding: 2rem;
+
+    //a little mobile fix
+    @include breakpoint(small only){
+      padding: 0.7rem;
+      text-align: center;
+    }
+
+    a{
+      color: #0a0a0a;
+
+      &:focus{
+        outline-style: none;
+      }
+    }
+
+    .card{
+      padding: 0.9rem;
+      margin-bottom: 1rem;
+
+
+
+      .card-section{
+        margin-bottom: 0.7rem;
+
+        img{
+          border-radius: 0.5rem;
+          width: 100% !important;
+          height: 450px !important;
+        }
+
+        .button{
+          border-radius: 0.2rem;
+          cursor: pointer;
+          font-size: 0.8rem;
+
+          &.more{
+            color: #00d6b2;
+            background-color: #ffffff;
+            border: 1px solid #00d6b2;
+          }
+
+          &.cart{
+            color: #ffffff;
+            background-color: #ff0000;
+            border: 1px solid #ff0000;
+            &:hover{
+              background-color: lighten(#bf0000, 7%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //fixed page on ispect
+  @media only screen and (min-width: 650px) and (max-width: 767px){
+    .display-products .cell {
+      margin-right: 20px;
+      margin-left: 10px;
+      width: 45%;
+    }
+
+    .card-section .button {
+      margin-top: 20px;
+    }
+
+    .display-products{
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .card{
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+
+      .card-section{
+        margin-bottom: 0.5rem;
+
+        img{
+          margin-left: 0;
+          border-radius: 0.5rem;
+          width: 300px !important;
+          height: 350px !important;
+        }
       }
     }
   }
