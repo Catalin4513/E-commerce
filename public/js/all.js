@@ -11935,7 +11935,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(45);
+module.exports = __webpack_require__(46);
 
 
 /***/ }),
@@ -11966,8 +11966,8 @@ __webpack_require__(40);
 __webpack_require__(41);
 __webpack_require__(42);
 __webpack_require__(43);
-
 __webpack_require__(44);
+__webpack_require__(45);
 
 /***/ }),
 /* 12 */
@@ -45773,6 +45773,7 @@ return src;
         switch ($("body").data("page-id")) {
             case 'home':
                 ACMESTORE.homeslider.initCarousel();
+                ACMESTORE.homeslider.homePageProducts();
                 break;
 
             case 'adminProduct':
@@ -45986,6 +45987,38 @@ return src;
 
 /***/ }),
 /* 44 */
+/***/ (function(module, exports) {
+
+(function () {
+    'use strict';
+
+    ACMESTORE.homeslider.homePageProducts = function () {
+        var app = new Vue({
+            el: '#root',
+            data: {
+                featured: [],
+                loading: false
+            },
+            methods: {
+                getFeaturedProducts: function getFeaturedProducts() {
+                    this.loading = true;
+                    axios.get('/featured').then(function (response) {
+                        console.log(response.data);
+                        // app.featured = response.data.featured;
+                        // app.loading = false;
+                    });
+                }
+            },
+
+            created: function created() {
+                this.getFeaturedProducts();
+            }
+        });
+    };
+})();
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {(function () {
@@ -46006,7 +46039,7 @@ return src;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

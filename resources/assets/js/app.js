@@ -22,7 +22,7 @@ require('../../assets/js/admin/update');
 require('../../assets/js/admin/delete');
 require('../../assets/js/admin/create');
 require('../../assets/js/admin/events');
-
+require('../../assets/js/pages/home_products');
 require('../../assets/js/pages/slider');
 
 
