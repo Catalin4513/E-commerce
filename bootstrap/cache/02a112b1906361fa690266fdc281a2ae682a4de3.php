@@ -7,8 +7,7 @@
     <div class="product" style="pading: 6rem;" id="product" data-token="<?php echo e($token); ?>"
      data-id="<?php echo e($product->id); ?>">
         <div class="text-center">
-            <i v-show="loading" class="fa fa-spinner fa-spin" style="font-size: 3rem; 
-            padding-bottom:3rem; color: #0a0a0a;"></i>
+            <img v-show="loading" src="/images/loading.gif">
         </div>
         <section class="item-container" v-if="loading == false">
             <div class="grid-x cell">
@@ -37,7 +36,8 @@
                         <h2> {{ product.name }}</h2>
                         <p> {{ product.description }} </p>
                         <h2> ${{ product.price}}</h2>
-                        <button class="button alert">Add to Cart</button>
+                        <button @click.prevent="addToCart(product.id)" class="button alert">
+                            Add to Cart</button>
                     </div>
                 </div>
 

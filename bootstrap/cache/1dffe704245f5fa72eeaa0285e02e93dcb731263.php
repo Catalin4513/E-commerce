@@ -6,6 +6,8 @@
 
     <div class="site_wrapper">
         <?php echo $__env->yieldContent('content'); ?>
+
+        <div class="notify text-center"></div>
     </div>
     <?php echo $__env->yieldContent('footer'); ?>
 <?php $__env->stopSection(); ?>

@@ -11963,7 +11963,7 @@ __webpack_require__(37);
 require('../../assets/js/admin/dashboard');
 require('../../assets/js/pages/cart');
 require('../../assets/js/pages/home_products');
-require('../../assets/js/pages/lib');
+
 */
 __webpack_require__(38);
 __webpack_require__(39);
@@ -11974,6 +11974,7 @@ __webpack_require__(43);
 __webpack_require__(44);
 __webpack_require__(45);
 __webpack_require__(46);
+__webpack_require__(53);
 
 /***/ }),
 /* 13 */
@@ -46018,11 +46019,12 @@ return src;
                     }));
                 },
                 stringLimit: function stringLimit(string, value) {
-                    if (string.length > value) {
-                        return string.substring(0, value) + '...';
-                    } else {
-                        return string;
-                    }
+                    return ACMESTORE.module.truncateString(string, value);
+                },
+                addToCart: function addToCart(id) {
+                    ACMESTORE.module.addItemToCart(id, function (message) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
+                    });
                 },
                 loadMoreProducts: function loadMoreProducts() {
                     var token = $('.display-products').data('token');
@@ -46106,16 +46108,15 @@ return src;
                         });
                     }, 1000);
                 },
-
                 stringLimit: function stringLimit(string, value) {
-                    if (string.length > value) {
-                        return string.substring(0, value) + '...';
-                    } else {
-                        return string;
-                    }
+                    return ACMESTORE.module.truncateString(string, value);
+                },
+                addToCart: function addToCart(id) {
+                    ACMESTORE.module.addItemToCart(id, function (message) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
+                    });
                 }
             },
-
             created: function created() {
                 this.getProductDetails();
             }
@@ -46129,6 +46130,46 @@ return src;
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(4),
+    Axios = _require.default;
+
+(function () {
+    'use strict';
+
+    ACMESTORE.module = {
+
+        truncateString: function limit(string, value) {
+            if (string.length > value) {
+                return string.substring(0, value) + '...';
+            } else {
+                return string;
+            }
+        },
+        addItemToCart: function addItemToCart(id, callback) {
+            var token = $('.display-products').data('token');
+
+            if (token == null || !token) {
+                token = $('.product').data('token');
+            }
+
+            var postData = $.param({ product_id: id, token: token });
+            axios.post('/cart', postData).then(function (response) {
+                callback(response.data.success);
+            });
+        }
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);
