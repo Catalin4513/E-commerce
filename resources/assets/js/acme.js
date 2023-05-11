@@ -5,7 +5,8 @@
 window.ACMESTORE = {
     global: {},
     admin: {},
-    homeslider: {}
+    homeslider: {},
+    product:{},
 
 };
 

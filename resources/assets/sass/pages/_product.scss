@@ -1,0 +1,32 @@
+.product{
+
+  
+
+
+  padding: 6rem;
+
+  //mobile view
+  @include breakpoint(small only){
+    padding: 1rem;
+    margin: 1rem;
+    text-align: center;
+    padding-top: 0.7rem;
+
+  }
+
+  p{
+    padding: 1rem;
+
+  }
+
+  .button{
+    border-radius: 0.2rem;
+    cursor: pointer;
+    border: 1px solid #ff0000;
+    margin-left: 1rem;
+    &:hover{
+      background-color: lighten(#bf0000, 7%);
+    }
+  }
+
+}
