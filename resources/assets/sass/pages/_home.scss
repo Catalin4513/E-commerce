@@ -18,6 +18,7 @@
   .card-section .button {
     display: block;
     margin-top: 10px;
+    width: 100%;
   }
 
   //fixind mobile
@@ -78,16 +79,32 @@
   //mobile view
   @include breakpoint(small only){
     padding-top: 2.5rem;
-  }
 
-  //general
+     //general
   .hero{
-    width: 100%;
+    width: 100% !important;
+    height: 256px !important;
     box-sizing: border-box;
 
     .hero-slider{
       img{
         width: 100% !important;
+        height: 100% !important;
+      }
+    }
+  }
+  }
+
+  //general
+  .hero{
+    width: 100%;
+    height: 750px;
+    box-sizing: border-box;
+
+    .hero-slider{
+      img{
+        width: 100% !important;
+        height: 750px;
       }
     }
   }
@@ -111,6 +128,8 @@
     .card{
       padding: 0.9rem;
       margin-bottom: 1rem;
+
+      padding-left: 0 !important;
 
 
 

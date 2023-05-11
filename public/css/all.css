@@ -8958,6 +8958,7 @@ hr {
 .home .card-section .button {
   display: block;
   margin-top: 10px;
+  width: 100%;
 }
 
 @media print, screen and (max-width: 39.99875em) {
@@ -9012,16 +9013,30 @@ hr {
   .home {
     padding-top: 2.5rem;
   }
+
+  .home .hero {
+    width: 100% !important;
+    height: 256px !important;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+
+  .home .hero .hero-slider img {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 .home .hero {
   width: 100%;
+  height: 750px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
 
 .home .hero .hero-slider img {
   width: 100% !important;
+  height: 750px;
 }
 
 .home .display-products {
@@ -9046,6 +9061,7 @@ hr {
 .home .display-products .card {
   padding: 0.9rem;
   margin-bottom: 1rem;
+  padding-left: 0 !important;
 }
 
 .home .display-products .card .card-section {
