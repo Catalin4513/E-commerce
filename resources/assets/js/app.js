@@ -11,8 +11,6 @@ require('chart.js/dist/Chart.bundle');
 //custom js files
 /*
 require('../../assets/js/admin/dashboard');
-require('../../assets/js/pages/cart');
-require('../../assets/js/pages/home_products');
 
 */
 require('../../assets/js/acme');
@@ -25,5 +23,6 @@ require('../../assets/js/pages/home_products');
 require('../../assets/js/pages/slider');
 require('../../assets/js/pages/product_details')
 require('../../assets/js/pages/lib');
+require('../../assets/js/pages/cart');
 
 

@@ -11376,6 +11376,12 @@ module.exports = g;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(13);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
@@ -11471,12 +11477,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(13);
 
 /***/ }),
 /* 5 */
@@ -11941,7 +11941,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(47);
+module.exports = __webpack_require__(49);
 
 
 /***/ }),
@@ -11949,7 +11949,7 @@ module.exports = __webpack_require__(47);
 /***/ (function(module, exports, __webpack_require__) {
 
 window.$ = window.JQuery = __webpack_require__(0);
-window.axios = __webpack_require__(4);
+window.axios = __webpack_require__(3);
 window.Vue = __webpack_require__(31);
 
 __webpack_require__(35);
@@ -11961,8 +11961,6 @@ __webpack_require__(37);
 //custom js files
 /*
 require('../../assets/js/admin/dashboard');
-require('../../assets/js/pages/cart');
-require('../../assets/js/pages/home_products');
 
 */
 __webpack_require__(38);
@@ -11974,7 +11972,8 @@ __webpack_require__(43);
 __webpack_require__(44);
 __webpack_require__(45);
 __webpack_require__(46);
-__webpack_require__(53);
+__webpack_require__(47);
+__webpack_require__(48);
 
 /***/ }),
 /* 13 */
@@ -11986,7 +11985,7 @@ __webpack_require__(53);
 var utils = __webpack_require__(1);
 var bind = __webpack_require__(5);
 var Axios = __webpack_require__(15);
-var defaults = __webpack_require__(3);
+var defaults = __webpack_require__(4);
 
 /**
  * Create an instance of Axios
@@ -12069,7 +12068,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(3);
+var defaults = __webpack_require__(4);
 var utils = __webpack_require__(1);
 var InterceptorManager = __webpack_require__(24);
 var dispatchRequest = __webpack_require__(25);
@@ -12610,7 +12609,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(1);
 var transformData = __webpack_require__(26);
 var isCancel = __webpack_require__(9);
-var defaults = __webpack_require__(3);
+var defaults = __webpack_require__(4);
 var isAbsoluteURL = __webpack_require__(27);
 var combineURLs = __webpack_require__(28);
 
@@ -45783,6 +45782,11 @@ return src;
 
                 break;
 
+            case 'cart':
+                ACMESTORE.product.cart();
+
+                break;
+
             case 'adminProduct':
                 ACMESTORE.admin.changeEvent();
                 ACMESTORE.admin.delete();
@@ -46077,7 +46081,7 @@ return src;
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(4),
+/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
     Axios = _require.default;
 
 (function () {
@@ -46127,20 +46131,9 @@ return src;
 
 /***/ }),
 /* 47 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(4),
+/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
     Axios = _require.default;
 
 (function () {
@@ -46170,6 +46163,75 @@ return src;
     };
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {(function () {
+    'use strict';
+
+    ACMESTORE.product.cart = function () {
+
+        var app = new Vue({
+            el: '#shopping_cart',
+            data: {
+                items: [],
+                cartTotal: 0,
+                loading: false,
+                fail: false,
+                authenticated: false,
+                message: ''
+            },
+            methods: {
+
+                displayItems: function displayItems(time) {
+
+                    this.loading = true;
+                    setTimeout(function () {
+                        axios.get('/cart/items').then(function (response) {
+
+                            if (response.data.fail) {
+                                app.fail = true;
+                                app.message = response.data.fail;
+                                app.loading = false;
+                            } else {
+                                app.items = response.data.items;
+                                app.cartTotal = response.data.cartTotal;
+                                app.loading = false;
+                            }
+                        });
+                    }, time);
+                },
+                updateQuantity: function updateQuantity(product_id, operator) {
+                    var postData = $.param({ product_id: product_id, operator: operator });
+                    axios.post('/cart/update-qty', postData).then(function (response) {
+
+                        app.displayItems(200);
+                    });
+                },
+                removeItem: function removeItem(index) {
+                    var postData = $.param({ item_index: index });
+                    axios.post('/cart/remove-item', postData).then(function (response) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
+                        app.displayItems(200);
+                    });
+                }
+            },
+            created: function created() {
+
+                this.displayItems(2000);
+            }
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
