@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Your Shopping Cart') 
 @section('data-page-id', 'cart')
+@section('stripe-checkout')
+     <script src="https://checkout.stripe.com/checkout.js"></script>
+ @endsection
 
 @section('content')
    
@@ -108,9 +111,19 @@
                                 Continue Shopping &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </a>
 
-                                <button type="submit" class="button success">
+                                <button @click.prevent="checkout" v-if="authenticated" class="button success">
                                 Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
                                 </button>
+                                <span v-else>
+                                    <a href="/login" class="button success" >
+                                         Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                                <span id="properties" class="hide"
+                                data-customer-email="{{ usermail() }}"
+                            data-stripe-key="{{ \App\classes\Session::get('publishable_key') }}">
+                            
+                            </span>
                             </div>
                         </div>
 

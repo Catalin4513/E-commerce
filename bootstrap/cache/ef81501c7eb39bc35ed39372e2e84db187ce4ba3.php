@@ -15,6 +15,8 @@
 <?php echo $__env->yieldContent('body'); ?>
 
 <script async src="/js/all.js"></script>
+
+<?php echo $__env->yieldContent('stripe-checkout'); ?>
 </body>
 </html>
 

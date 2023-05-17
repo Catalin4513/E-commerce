@@ -27,7 +27,17 @@ class Mail
         $this->mail->Port = $_ENV['SMTP_PORT'];
 
         $environment = $_ENV['APP_ENV'];
-        if($environment === 'local'){$this->mail->SMTPDebug = 2;}
+        if($environment === 'local'){
+            
+            $this->mail->SMTPOptions =[
+                'ssl' =>array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true,
+                    
+                )
+            ];
+            $this->mail->SMTPDebug = '';}
 
         $this->mail->Username = $_ENV['EMAIL_USERNAME'];
         $this->mail->Password = $_ENV['EMAIL_PASSWORD'];

@@ -15,6 +15,8 @@
 @yield('body')
 
 <script async src="/js/all.js"></script>
+
+@yield('stripe-checkout')
 </body>
 </html>
 

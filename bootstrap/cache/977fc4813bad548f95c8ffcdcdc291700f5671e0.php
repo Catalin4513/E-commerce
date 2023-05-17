@@ -1,5 +1,8 @@
 <?php $__env->startSection('title', 'Your Shopping Cart'); ?> 
 <?php $__env->startSection('data-page-id', 'cart'); ?>
+<?php $__env->startSection('stripe-checkout'); ?>
+     <script src="https://checkout.stripe.com/checkout.js"></script>
+ <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
    
@@ -107,9 +110,19 @@
                                 Continue Shopping &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </a>
 
-                                <button type="submit" class="button success">
+                                <button @click.prevent="checkout" v-if="authenticated" class="button success">
                                 Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
                                 </button>
+                                <span v-else>
+                                    <a href="/login" class="button success" >
+                                         Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                                <span id="properties" class="hide"
+                                data-customer-email="<?php echo e(usermail()); ?>"
+                            data-stripe-key="<?php echo e(\App\classes\Session::get('publishable_key')); ?>">
+                            
+                            </span>
                             </div>
                         </div>
 

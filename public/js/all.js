@@ -46173,6 +46173,24 @@ return src;
 
     ACMESTORE.product.cart = function () {
 
+        var Stripe = StripeCheckout.configure({
+
+            key: $('#properties').data('stripe-key'),
+            locale: "auto",
+            image: "https://files.stripe.com/links/MDB8YWNjdF8xTjhlOWJEQnlqQno0Y1NrfGZsX2xpdmVfRm14UmJpYlA5b2pEdWhFRW0wSG1PSkg000wrDwcUNw",
+            token: function token(_token) {
+
+                var data = $.param({ stripeToken: _token.id, stripeEmail: _token.email });
+                axios.post('cart/payment', data).then(function (response) {
+                    $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
+                    app.displayItems(200);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+
+        });
+
         var app = new Vue({
             el: '#shopping_cart',
             data: {
@@ -46181,7 +46199,8 @@ return src;
                 loading: false,
                 fail: false,
                 authenticated: false,
-                message: ''
+                message: '',
+                amountInCents: 0
             },
             methods: {
 
@@ -46199,6 +46218,8 @@ return src;
                                 app.items = response.data.items;
                                 app.cartTotal = response.data.cartTotal;
                                 app.loading = false;
+                                app.authenticated = response.data.authenticated;
+                                app.amountInCents = response.data.amountInCents;
                             }
                         });
                     }, time);
@@ -46223,6 +46244,17 @@ return src;
                     axios.post('/cart/remove-all').then(function (response) {
                         $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
                         app.displayItems();
+                    });
+                },
+
+                checkout: function checkout() {
+
+                    Stripe.open({
+                        name: "MYSTORE",
+                        description: " Shopping Cart Items",
+                        email: $('#properties').data('customer-email'),
+                        amount: app.amountInCents,
+                        zipCode: true
                     });
                 }
 

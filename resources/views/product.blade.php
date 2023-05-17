@@ -37,8 +37,13 @@
                         <h2> @{{ product.name }}</h2>
                         <p> @{{ product.description }} </p>
                         <h2> $@{{ product.price}}</h2>
-                        <button @click.prevent="addToCart(product.id)" class="button alert">
-                            Add to Cart</button>
+                            <button v-if="product.quantity > 0" @click.prevent="addToCart(product.id)"
+                             class="button alert">
+                                   Add to cart
+                                </button>
+                                <button v-else class="button warning " disabled>
+                                    Out of Stock
+                                </button>
                     </div>
                 </div>
 
