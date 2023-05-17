@@ -1,28 +1,32 @@
-<div class="grid-x grid-padding-x" cell>
-    <div class="cell medium-11">
-    @if(isset($errors))
-    <div class="callout alert" data-closable>
-        @foreach($errors as $error_array)
-            @foreach($error_array as $error_item)
-                {{ $error_item }} <br>
-            @endforeach
-        @endforeach
-
-        <button class="close-button" aria-label="Dismiss Message" type="button" data-close>
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
-
+<div class="row expanded">
+    <div class="column medium-11">
+        @if((isset($errors) && count($errors)) || \App\classes\Session::has('error'))
+            <div class="callout alert" data-closable>
+                @if(\App\classes\Session::has('error'))
+                    {{ \App\classes\Session::flash('error') }}
+                @else
+                    @foreach($errors as $error_array)
+                        @foreach($error_array as $error_item)
+                            {{ $error_item }} <br />
+                        @endforeach
+                    @endforeach
+                @endif
+            
+                <button class="close-button" arial-label="Dismiss Message" type="button" data-close>
+                    <span arial-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+    
         @if(isset($success) || \App\classes\Session::has('success'))
             <div class="callout success" data-closable>
                 @if(isset($success))
-                {{ $success }}
+                    {{ $success }}
                 @elseif(\App\classes\Session::has('success'))
-                {{\App\classes\Session::flash('success') }}
+                    {{ \App\classes\Session::flash('success') }}
                 @endif
-                <button class="close-button" aria-label="Dismiss Message" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
+                <button class="close-button" arial-label="Dismiss Message" type="button" data-close>
+                    <span arial-hidden="true">&times;</span>
                 </button>
             </div>
         @endif

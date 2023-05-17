@@ -1,0 +1,17 @@
+.auth{
+
+  
+
+
+  padding-top: 5rem;
+
+  @include breakpoint(small only){
+    padding-top: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+   
+  
+
+}

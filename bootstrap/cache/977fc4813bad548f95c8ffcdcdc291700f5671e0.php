@@ -95,15 +95,24 @@
                                 </td>
                             </tr>
                         </table>
-                    <div class="text-right">
-                        <a href="/" class="button secondary">Continue Shopping &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                        </a>
 
-                        <button type="submit" class ="button success">
-                            Checkout &nbsp; <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
-                        </button>
+                        <div class="button-container">
+                            <div class="text-left">
+                                <button @click="removeAll()" class="button primary">
+                                Empty Cart
+                                </button>
+                            </div>
+                            <div class="text-right">
+                                <a href="/" class="button secondary">
+                                Continue Shopping &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </a>
 
-                    </div>
+                                <button type="submit" class="button success">
+                                Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
 
              </div>
             </div>

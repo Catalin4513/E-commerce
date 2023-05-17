@@ -38,10 +38,27 @@
         </div>
                 <div class="top-bar-right">
                     <ul class="dropdown menu vertical medium-horizontal">
-                        <li><a href="#">Username</a></li>
-                        <li><a href="#">Sign In</a> </li>
-                        <li><a href="#">Register</a> </li>
-                        <li><a href="/cart">Cart</a> </li>
+                        <!-- <li><a href="#">Username</a></li>
+                        <li><a href="/login">Sign In</a> </li>
+                        <li><a href="/register">Register</a> </li>
+                        <li><a href="/cart">Cart</a> </li> -->
+                        <?php if(isAuthenticated()): ?>
+                            <li><a href="#"> <?php echo e(user()->username); ?></a></li>
+                            <li>
+                                <a href="/cart">
+                                    Cart &nbsp; <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li><a href="/logout">Logout</a> </li>
+                        <?php else: ?>
+                            <li><a href="/login">Sign In</a> </li>
+                            <li><a href="/register">Register</a> </li>
+                            <li>
+                                <a href="/cart">
+                                    Cart &nbsp; <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>

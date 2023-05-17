@@ -48,7 +48,18 @@
                             .html(response.data.success);
                         app.displayItems(200);
                     })
-                }
+                },
+             
+
+                removeAll: function () {
+                    
+                    axios.post('/cart/remove-all').then(function (response){
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300)
+                            .html(response.data.success);
+                        app.displayItems();
+                    })
+                 },
+
             },
              created: function (){
 

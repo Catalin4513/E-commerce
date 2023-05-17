@@ -1,0 +1,20 @@
+<?php
+
+namespace App\models;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
+
+class User extends Model {
+
+    use SoftDeletes;
+    public $timestamp = true;
+
+    protected $fillable = ['username', 'fullname', 'email', 'password', 'address', 'role'];
+
+    protected $dates = ['deleted_at'];
+
+
+
+   
+}

@@ -9123,6 +9123,27 @@ hr {
   background-color: #e30000;
 }
 
+.button-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.auth {
+  padding-top: 5rem;
+}
+
+@media print, screen and (max-width: 39.99875em) {
+  .auth {
+    padding-top: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+  }
+}
+
 .slide-in-down.mui-enter {
   -webkit-transition-duration: 500ms;
           transition-duration: 500ms;
