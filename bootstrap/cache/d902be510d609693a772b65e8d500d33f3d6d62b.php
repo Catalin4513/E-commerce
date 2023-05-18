@@ -6,7 +6,7 @@
     
     <div  class="image-holder text-center">
         <img src="/images/ME.gif" alt="ME" title="Admin">
-        <p>{{user()->fullname}}</p>
+        <p><?php echo e(user()->fullname); ?></p>
     </div>
     
  <ul class="vertical menu">

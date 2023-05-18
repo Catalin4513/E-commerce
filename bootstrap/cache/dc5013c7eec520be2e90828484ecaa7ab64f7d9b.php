@@ -1,10 +1,9 @@
-@extends('admin.layout.base')
-@section('title', 'Dashboard')
-@section('data-page-id', 'adminDashboard')
+<?php $__env->startSection('title', 'Dashboard'); ?>
+<?php $__env->startSection('data-page-id', 'adminDashboard'); ?>
 
 
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="dashboard admin_shared">
         <div class="grid-x collapse" data-equalizar data-equalizar-on="medium">
 
@@ -18,7 +17,7 @@
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             </div>
                             <div class="small-9 cell">
-                                <p>Total Orders</p><h4>{{ $orders}}</h4>
+                                <p>Total Orders</p><h4><?php echo e($orders); ?></h4>
                             </div>
                         </div>
                     </div>
@@ -43,7 +42,7 @@
                                 <i class="fa fa-thermometer-empty" aria-hidden="true"></i>
                             </div>
                             <div class="small-9 cell">
-                                <p>Stock</p><h4>{{$products}}</h4>
+                                <p>Stock</p><h4><?php echo e($products); ?></h4>
                             </div>
                         </div>
                     </div>
@@ -68,7 +67,7 @@
                                 <i class="fa fa-money" aria-hidden="true"></i>
                             </div>
                             <div class="small-9 cell">
-                                <p>Revenue</p><h4>${{number_format($payments, 2)}}</h4>
+                                <p>Revenue</p><h4>$<?php echo e(number_format($payments, 2)); ?></h4>
                             </div>
                         </div>
                     </div>
@@ -94,7 +93,7 @@
                                 <i class="fa fa-users" aria-hidden="true"></i>
                             </div>
                             <div class="small-9 cell">
-                                <p>Signup</p><h4>{{$users}}</h4>
+                                <p>Signup</p><h4><?php echo e($users); ?></h4>
                             </div>
                         </div>
                     </div>
@@ -138,4 +137,5 @@
             
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layout.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -8779,8 +8779,19 @@ p {
   display: none;
 }
 
-hr {
+.admin_shared hr {
   margin: 0 0 1rem 0;
+}
+
+.admin_shared h2 {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+  margin-bottom: 1.6;
+  font-weight: 500;
+  padding: 1rem;
+  padding-left: 0;
 }
 
 .reveal {
@@ -8815,11 +8826,15 @@ hr {
 }
 
 .nav {
-  background-color: #2a3f54;
+  background-color: #1c2b39;
+  background-image: url("/images/sidebar.gif");
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: absolute;
 }
 
 .nav .menu > li > a {
-  color: #fff;
+  color: #ffffff;
   font-size: 1.2rem;
 }
 
@@ -8830,7 +8845,7 @@ hr {
 }
 
 .nav h3 {
-  color: #fff;
+  color: #ffffff;
   font-size: 1.5rem;
   text-align: center;
   font-weight: 500;
@@ -8838,24 +8853,24 @@ hr {
 
 .nav .image-holder {
   padding: 0.7rem;
-  background-color: #2a3f54;
+  background-color: #1c2b39;
 }
 
 .nav .image-holder img {
   border-radius: 50%;
-  border: 1px solid #fff;
+  border: 1px solid #2A3F54;
   padding: 0.3rem;
   height: 200px;
   width: 200px;
 }
 
 .nav .image-holder p {
-  color: #fff;
-  font-size: 1.5rem;
+  color: #ffffff;
+  font-size: 1rem;
 }
 
 .admin_title_bar .title-bar {
-  background-color: #ededed;
+  background-color: #EDEDED;
 }
 
 .admin_title_bar .title-bar .title-bar-title {
@@ -9141,6 +9156,100 @@ hr {
     padding-top: 1rem;
     padding: 1rem;
     margin: 1rem;
+  }
+}
+
+.dashboard {
+  padding: 2rem 1rem;
+}
+
+@media print, screen and (max-width: 39.99875em) {
+  .dashboard .summary {
+    padding-bottom: 1rem;
+  }
+}
+
+.dashboard .summary .card {
+  width: 95%;
+  margin: 0 auto;
+}
+
+@media print, screen and (min-width: 40em) and (max-width: 63.99875em) {
+  .dashboard .summary .card {
+    width: 98%;
+  }
+}
+
+.dashboard .summary .card .card-section .fa {
+  font-size: 2.5rem;
+}
+
+@media print, screen and (min-width: 40em) and (max-width: 63.99875em) {
+  .dashboard .summary .card .card-section .fa {
+    font-size: 0.9rem;
+  }
+}
+
+.dashboard .summary .card .card-section .fa.fa-shopping-cart {
+  color: #ff4500;
+}
+
+.dashboard .summary .card .card-section .fa.fa-money {
+  color: #00AA00;
+}
+
+.dashboard .summary .card .card-section .fa.fa-thermometer-empty {
+  color: #da8301;
+}
+
+.dashboard .summary .card .card-section .fa.fa-users {
+  color: #00BFFF;
+}
+
+.dashboard .summary .card .card-section p,
+.dashboard .summary .card .card-section h4 {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+@media print, screen and (min-width: 40em) and (max-width: 63.99875em) {
+  .dashboard .summary .card .card-section p,
+  .dashboard .summary .card .card-section h4 {
+    font-size: 0.8rem;
+  }
+}
+
+.dashboard .summary .card .card-divider {
+  border-top: 1px solid #6c9a9d;
+  background-color: #ffffff;
+}
+
+.dashboard .summary .card .card-divider a {
+  color: #337ab7;
+}
+
+.dashboard .graph {
+  margin: 2rem 0.5rem;
+}
+
+@media print, screen and (max-width: 39.99875em) {
+  .dashboard .graph {
+    margin-top: 1rem;
+  }
+}
+
+.dashboard .graph .card {
+  width: 98%;
+}
+
+.dashboard .graph canvas {
+  height: 300px !important;
+}
+
+@media print, screen and (max-width: 39.99875em) {
+  .dashboard .graph canvas {
+    height: auto !important;
   }
 }
 

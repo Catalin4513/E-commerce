@@ -5,6 +5,7 @@ namespace App\controllers\admin;
 use App\classes\CSRFToken;
 use App\classes\Redirect;
 use App\classes\Request;
+use App\classes\Role;
 use App\classes\Session;
 use App\classes\ValidateRequest;
 use App\controllers\BaseController;
@@ -12,6 +13,17 @@ use App\models\Category;
 use App\models\SubCategory;
 
 class SubCategoryController extends BaseController {
+
+
+    public function __construct(){
+
+        if(!Role::middleware('admin')){
+
+            Redirect::to('/login');
+        }
+
+
+    }
 
     public function store(){
 

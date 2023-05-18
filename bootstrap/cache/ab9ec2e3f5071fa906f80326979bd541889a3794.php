@@ -1,8 +1,7 @@
-@extends('admin.layout.base')
-@section('title', 'Product Categories')
-@section('data-page-id', 'adminCategories')
+<?php $__env->startSection('title', 'Product Categories'); ?>
+<?php $__env->startSection('data-page-id', 'adminCategories'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="category admin_shared">
         <div class="grid-x grid-padding-x">
             <div class="cell medium-11">
@@ -10,7 +9,7 @@
             </div>
         </div>
 
-        @include('includes.message')
+        <?php echo $__env->make('includes.message', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
@@ -28,7 +27,7 @@
                 <form action="/admin/product/categories" method="post">
                     <div class="input-group">
                         <input type="text" class="input-group-field" name="name" placeholder="Category Name">
-                        <input type="hidden" name="token" value="{{ \App\classes\CSRFToken::_token() }}">
+                        <input type="hidden" name="token" value="<?php echo e(\App\classes\CSRFToken::_token()); ?>">
                         <div class="input-group-button">
                             <input type="submit" class="button" value="Create">
                         </div>
@@ -39,52 +38,52 @@
 
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-11 cell">
-                @if(count($categories))
+                <?php if(count($categories)): ?>
                     <table class="hover unstriped" data-form="deleteForm">
                     <thead>
                        <tr> <th>Name</th><th>Slug</th><th>Date Created</th><th width="70">Action</th></tr>
 
                          </thead>
                         <tbody>
-                        @foreach($categories as $category)
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td>{{ $category['name'] }}</td>
-                                <td>{{ $category['slug'] }}</td>
-                                <td>{{ $category['added'] }}</td>
+                                <td><?php echo e($category['name']); ?></td>
+                                <td><?php echo e($category['slug']); ?></td>
+                                <td><?php echo e($category['added']); ?></td>
                                 <td width="70" class="text-right" style="padding-left: 5px;">
                                     <span data-tooltip aria-haspopup="true"
                                           class="has-tip top" data-disable-hover="false"
                                           tabindex="1" title="Add SubCategory">
-                                    <a data-open="add-subcategory-{{ $category['id'] }}"><i class="fa fa-plus"></i></a>
+                                    <a data-open="add-subcategory-<?php echo e($category['id']); ?>"><i class="fa fa-plus"></i></a>
                                     </span>
                                     <span data-tooltip aria-haspopup="true"
                                           class="has-tip top" data-disable-hover="false"
                                           tabindex="1" title="Edit Category">
-                                    <a data-open="item-{{ $category['id'] }}"><i class="fa fa-edit"></i></a>
+                                    <a data-open="item-<?php echo e($category['id']); ?>"><i class="fa fa-edit"></i></a>
                                     </span>
                                     <span style="display: inline-block;" data-tooltip aria-haspopup="true"
                                           class="has-tip top" data-disable-hover="false"
                                           tabindex="1" title="Delete Category">
-                                            <form method="POST" action="/admin/product/categories/{{$category['id']}}/delete"
+                                            <form method="POST" action="/admin/product/categories/<?php echo e($category['id']); ?>/delete"
                                                   class="delete-item">
-                                                <input type="hidden" name="token" value="{{ \App\Classes\CSRFToken::_token() }}">
+                                                <input type="hidden" name="token" value="<?php echo e(\App\Classes\CSRFToken::_token()); ?>">
                                                 <button type="submit"><i class="fa fa-times delete"></i> </button>
                                             </form>
                                         </span>
                                     <!--Edit Category Modal -->
-                                    <div class="reveal" id="item-{{$category['id']}}"
+                                    <div class="reveal" id="item-<?php echo e($category['id']); ?>"
                                          data-reveal data-close-on-click="false" data-close-on-esc="false"
                                     data-animation-in="fade-in"data-animation-out="scale-out-up">
                                         <div class="notification callout primary">notif</div>
                                         <h2>Edit Category</h2>
                                         <form>
                                             <div class="input-group">
-                                                <input type="text" id="item-name-{{ $category['id'] }}"
-                                                       name="name" value="{{ $category['name'] }}">
+                                                <input type="text" id="item-name-<?php echo e($category['id']); ?>"
+                                                       name="name" value="<?php echo e($category['name']); ?>">
                                                 <div>
                                                     <input type="submit" class="button update-category"
-                                                           id="{{$category['id']}}"
-                                                           data-token="{{ \App\Classes\CSRFToken::_token() }}"
+                                                           id="<?php echo e($category['id']); ?>"
+                                                           data-token="<?php echo e(\App\Classes\CSRFToken::_token()); ?>"
                                                            value="Update">
                                                 </div>
                                             </div>
@@ -96,18 +95,18 @@
                                     <!--End Edit Category Modal -->
 
                                     <!--Add SubCategory Modal -->
-                                    <div class="reveal" id="add-subcategory-{{$category['id']}}"
+                                    <div class="reveal" id="add-subcategory-<?php echo e($category['id']); ?>"
                                          data-reveal data-close-on-click="false" data-close-on-esc="false"
                                          data-animation-in="fade-in" data-animation-out="scale-out-up">
                                         <div class="notification callout primary">notif</div>
                                         <h2>Add SubCategory</h2>
                                         <form>
                                             <div class="input-group">
-                                                <input type="text" id="subcategory-name-{{ $category['id'] }}">
+                                                <input type="text" id="subcategory-name-<?php echo e($category['id']); ?>">
                                                 <div>
                                                     <input type="submit" class="button add-subcategory"
-                                                           id="{{$category['id']}}"
-                                                           data-token="{{ \App\Classes\CSRFToken::_token() }}"
+                                                           id="<?php echo e($category['id']); ?>"
+                                                           data-token="<?php echo e(\App\Classes\CSRFToken::_token()); ?>"
                                                            value="Create">
                                                 </div>
                                             </div>
@@ -119,13 +118,14 @@
                                     <!--End Add SubCategory Modal -->
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
-                    {!! $links !!}
-                @else
+                    <?php echo $links; ?>
+
+                <?php else: ?>
                     <h2>You have not created any category</h2>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -146,54 +146,54 @@
 
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-11 cell">
-                @if(count($subcategories))
+                <?php if(count($subcategories)): ?>
                     <table class="hover  unstriped" data-form="deleteForm">
                         <thead>
                        <tr> <th>Name</th><th>Slug</th><th>Date Created</th><th width="50">Action</th></tr>
 
                          </thead>
                         <tbody>
-                        @foreach($subcategories as $subcategory)
+                        <?php $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td>{{ $subcategory['name'] }}</td>
-                                <td>{{ $subcategory['slug'] }}</td>
-                                <td>{{ $subcategory['added'] }}</td>
+                                <td><?php echo e($subcategory['name']); ?></td>
+                                <td><?php echo e($subcategory['slug']); ?></td>
+                                <td><?php echo e($subcategory['added']); ?></td>
                                 <td width="50" class="text-right" style="padding-left: 5px;">
                                     
                                     <span data-tooltip aria-haspopup="true"
                                           class="has-tip top" data-disable-hover="false"
                                           tabindex="1" title="Edit Subategory">
-                                    <a data-open="item-subcategory-{{ $subcategory['id'] }}"><i class="fa fa-edit"></i></a>
+                                    <a data-open="item-subcategory-<?php echo e($subcategory['id']); ?>"><i class="fa fa-edit"></i></a>
                                     </span>
                                     <span style="display: inline-block;" data-tooltip aria-haspopup="true"
                                           class="has-tip top" data-disable-hover="false"
                                           tabindex="1" title="Delete Subcategory">
-                                            <form method="POST" action="/admin/product/subcategory/{{$subcategory['id']}}/delete"
+                                            <form method="POST" action="/admin/product/subcategory/<?php echo e($subcategory['id']); ?>/delete"
                                                   class="delete-item">
-                                                <input type="hidden" name="token" value="{{ \App\Classes\CSRFToken::_token() }}">
+                                                <input type="hidden" name="token" value="<?php echo e(\App\Classes\CSRFToken::_token()); ?>">
                                                 <button type="submit"><i class="fa fa-times delete"></i> </button>
                                             </form>
                                         </span>
                                     <!--Edit Subcategory Modal -->
-                                    <div class="reveal" id="item-subcategory-{{$subcategory['id']}}"
+                                    <div class="reveal" id="item-subcategory-<?php echo e($subcategory['id']); ?>"
                                          data-reveal data-close-on-click="false" data-close-on-esc="false"
                                     data-animation-in="fade-in"data-animation-out="scale-out-up">
                                         <div class="notification callout primary">notif</div>
                                         <h2>Edit Subcategory</h2>
                                         <form>
                                             <div class="input-group" style="display: block;">
-                                                <input type="text" id="item-subcategory-name-{{ $subcategory['id'] }}"
-                                                        value="{{ $subcategory['name'] }}">
+                                                <input type="text" id="item-subcategory-name-<?php echo e($subcategory['id']); ?>"
+                                                        value="<?php echo e($subcategory['name']); ?>">
 
                                                 <label>Change Category
-                                                    <select id ="item-category-{{$subcategory['category_id'] }}">
-                                                    @foreach(\App\models\Category::all() as $category)
+                                                    <select id ="item-category-<?php echo e($subcategory['category_id']); ?>">
+                                                    <?php $__currentLoopData = \App\models\Category::all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                                        @if($category->id ==$subcategory['category_id'])
-                                                        <option selected="selected" value="{{ $category->id }}">{{ $category->name }}</option>
-                                                        @endif
-                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                    @endforeach
+                                                        <?php if($category->id ==$subcategory['category_id']): ?>
+                                                        <option selected="selected" value="<?php echo e($category->id); ?>"><?php echo e($category->name); ?></option>
+                                                        <?php endif; ?>
+                                                    <option value="<?php echo e($category->id); ?>"><?php echo e($category->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </select>
                                                 </label>
 
@@ -202,8 +202,8 @@
 
                                                 <div>
                                                     <input type="submit" class="button update-subcategory"
-                                                           id="{{$subcategory['id']}}" data-category-id="{{$subcategory['category_id']}}"
-                                                           data-token="{{ \App\Classes\CSRFToken::_token() }}"
+                                                           id="<?php echo e($subcategory['id']); ?>" data-category-id="<?php echo e($subcategory['category_id']); ?>"
+                                                           data-token="<?php echo e(\App\Classes\CSRFToken::_token()); ?>"
                                                            value="Update">
                                                 </div>
                                             </div>
@@ -217,13 +217,14 @@
                                  
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
-                    {!! $subcategories_links !!}
-                @else
+                    <?php echo $subcategories_links; ?>
+
+                <?php else: ?>
                     <h2>You have not created any  subcategory</h2>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -231,5 +232,6 @@
 
 
 
-    @include('includes.delete-modal')
-@endsection
+    <?php echo $__env->make('includes.delete-modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layout.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

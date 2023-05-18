@@ -3,7 +3,8 @@
 
 //for admin routes
 $router->map('GET','/admin','App\controllers\admin\DashboardController@show','admin_dashboard');
-$router->map('POST','/admin','App\controllers\admin\DashboardController@get','admin_form');
+$router->map('GET','/admin/charts','App\controllers\admin\DashboardController@getChartData','admin_dashboard_charts');
+
 
 
 //products management

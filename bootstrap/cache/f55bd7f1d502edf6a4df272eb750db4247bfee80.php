@@ -1,8 +1,7 @@
-@extends('admin.layout.base')
-@section('title', 'Create Product')
-@section('data-page-id', 'adminProduct')
+<?php $__env->startSection('title', 'Create Product'); ?>
+<?php $__env->startSection('data-page-id', 'adminProduct'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="add-product admin_shared">
         <div class="grid-x grid-padding-x">
             <div class="cell medium-11">
@@ -10,7 +9,7 @@
             </div>
         </div>
 
-        @include('includes.message')
+        <?php echo $__env->make('includes.message', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 
 
@@ -23,7 +22,7 @@
                     <div class="small-12 medium-6 cell">
                         <label>Product name:
                         <input type="text" name="name" placeholder="Product name"
-                        value="{{ \App\classes\Request::old('post','name')}}"></input>
+                        value="<?php echo e(\App\classes\Request::old('post','name')); ?>"></input>
                         </label>
                     </div>
 
@@ -32,7 +31,7 @@
                     <div class="small-12 medium-6 cell">
                         <label>Product price:
                         <input type="text" name="price" placeholder="Product price"
-                        value="{{ \App\classes\Request::old('post','price')}}"></input>
+                        value="<?php echo e(\App\classes\Request::old('post','price')); ?>"></input>
                         </label>
                     </div>
 
@@ -41,14 +40,15 @@
                     <div class="small-12 medium-6 cell">
                         <label>Product Category:
                         <select name="category" id="product-category">
-                        <option value="{{ \App\classes\Request::old('post','category')?:"" }}">
-                        {{ \App\classes\Request::old('post','category')?:"Select Category" }}
+                        <option value="<?php echo e(\App\classes\Request::old('post','category')?:""); ?>">
+                        <?php echo e(\App\classes\Request::old('post','category')?:"Select Category"); ?>
+
 
                         </option>
-                        @foreach($categories as $category)
-                    <option value="{{ $category->id}}"> {{ $category->name }}</option>
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($category->id); ?>"> <?php echo e($category->name); ?></option>
 
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         </label>
                     </div>
@@ -58,8 +58,9 @@
                     <div class="small-12 medium-6 cell">
                         <label>Product Subcategory:
                             <select name="subcategory" id="product-subcategory">
-                                <option value="{{ \App\classes\Request::old('post','subcategory')?:"" }}">
-                                {{ \App\classes\Request::old('post','subcategory')?:"Select Subcategory" }}
+                                <option value="<?php echo e(\App\classes\Request::old('post','subcategory')?:""); ?>">
+                                <?php echo e(\App\classes\Request::old('post','subcategory')?:"Select Subcategory"); ?>
+
 
                                 </option>
                             </select>
@@ -75,13 +76,14 @@
                     <div class="small-12 medium-6 cell">
                         <label>Product Quantity:
                         <select name="quantity" >
-                        <option value="{{ \App\classes\Request::old('post','quantity')?:"" }}">
-                        {{ \App\classes\Request::old('post','quantity')?:"Select quantity" }}
+                        <option value="<?php echo e(\App\classes\Request::old('post','quantity')?:""); ?>">
+                        <?php echo e(\App\classes\Request::old('post','quantity')?:"Select quantity"); ?>
+
 
                         </option>
-                    @for($i = 1; $i <=50;$i++)
-                    <option value="{{ $i }}">{{$i}}</option>
-                    @endfor
+                    <?php for($i = 1; $i <=50;$i++): ?>
+                    <option value="<?php echo e($i); ?>"><?php echo e($i); ?></option>
+                    <?php endfor; ?>
 
 
                       
@@ -103,10 +105,10 @@
 
                     <div class="small-12 cell">
                         <label>Description
-                        <textarea name="description" placeholder="Description">{{\App\classes\Request::old('post','description')}}</textarea>
+                        <textarea name="description" placeholder="Description"><?php echo e(\App\classes\Request::old('post','description')); ?></textarea>
                         </label>
 
-                        <input type="hidden" name="token" value="{{\App\classes\CSRFToken::_token() }}">
+                        <input type="hidden" name="token" value="<?php echo e(\App\classes\CSRFToken::_token()); ?>">
                         <button class="button alert" type="reset">Reset</button>
                         <input class="button success float-right" type="submit" value="Save Product">
                     </div>
@@ -117,5 +119,6 @@
         </form>
     </div>
 
-    @include('includes.delete-modal')
-@endsection
+    <?php echo $__env->make('includes.delete-modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layout.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -3,43 +3,67 @@
 namespace App\controllers\admin;
 
 use App\classes\Request;
+use App\classes\Role;
 use App\controllers\BaseController;
 use App\classes\Session;
+use App\models\Order;
+use App\models\Payment;
+use App\models\Product;
+use App\models\User;
+use App\classes\Redirect;
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 
 class DashboardController
 {
+
+    public function __construct(){
+
+        if(!Role::middleware('admin')){
+
+            Redirect::to('/login');
+        }
+
+
+    }
     public function show(){
 
-       Session::add('admin', 'You are welcome, admin user');
+     //$orders = Capsule::table('orders')->count(Capsule::raw('DISTINCT order_no'));
+   $orders = Order::all()->count();
 
-       Session::remove('admin');
+     $products = Product::all()->count();
 
-       if(Session::has('admin')){
+     $users = User::all()->count();
 
-        $msg = Session::get('admin');
+     $payments = Payment::all()->sum('amount')/100;
 
-       }else{
-        $msg = 'Not defined';
+        return view('admin/dashboard', compact('orders', 'products', 'payments', 'users'));
     }
 
-        return view('admin/dashboard',['admin' => $msg]);
-    }
+    public function getChartData(){
 
-    public function get(){
+        
 
-    Request::refresh();    
+        $revenue = Capsule::table('payments')->select(
+            Capsule::raw('sum(amount) / 100 as `amount`'),
+            Capsule::raw("DATE_FORMAT(created_at, '%m-%Y') new_date"),
+            Capsule::raw('YEAR(created_at) year, Month(created_at) month')
 
+        )->groupBy('year', 'month')->get();
 
-    $data = Request::old('post', 'product');
+        $orders = Capsule::table('orders')->select(
+            Capsule::raw('count(id) as `count`'),
+            Capsule::raw("DATE_FORMAT(created_at, '%m-%Y') new_date"),
+            Capsule::raw('YEAR(created_at) year, Month(created_at) month')
 
-    var_dump($data);
-    // if (Request::has('post')){
+        )->groupBy('year', 'month')->get();
 
-    //     $request = Request::get('post');
-    //     var_dump($request->product);
-    // } else {
-    // var_dump('posting doesnt exist');
-    // }
+        echo json_encode([
+            'revenues' => $revenue, 'orders' => $orders
+        ]);
+  
+ 
 
     
    
