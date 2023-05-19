@@ -17,6 +17,8 @@
 <script async src="/js/all.js"></script>
 
 @yield('stripe-checkout')
+
+@yield('paypal-checkout')
 </body>
 </html>
 

@@ -18,15 +18,24 @@
             ACMESTORE.product.details();
   
                 break;
+
+            case 'products':
+            case 'categories':
+            ACMESTORE.products.display();
+                break;
                 
             case 'cart': 
             ACMESTORE.product.cart();
       
                 break;
 
-           case 'adminProduct':
+            case 'adminProduct':
                ACMESTORE.admin.changeEvent();
                ACMESTORE.admin.delete();
+                break;
+
+            case 'adminUsers':
+                ACMESTORE.admin.update();
                 break;
 
                 case 'adminDashboard':

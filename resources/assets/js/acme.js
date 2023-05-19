@@ -7,7 +7,7 @@ window.ACMESTORE = {
     admin: {},
     homeslider: {},
     product:{},
-
+    products: {},
 };
 
 })();

@@ -5,6 +5,10 @@
      <script src="https://checkout.stripe.com/checkout.js"></script>
  @endsection
 
+@section('paypal-checkout')
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+@endsection
+
 @section('content')
    
 
@@ -16,7 +20,7 @@
 
         <section class="items" v-if="loading == false">
 
-        <div class="row">
+        <div class="grid-x grid-padding-x">
 
             <div class="small-12">
                 <h2 v-if="fail" v-text="message"></h2>
@@ -102,7 +106,7 @@
 
                         <div class="button-container">
                             <div class="text-left">
-                                <button @click="removeAll()" class="button primary">
+                                <button @click="emptyCart" class="button primary">
                                 Empty Cart
                                 </button>
                             </div>
@@ -111,9 +115,16 @@
                                 Continue Shopping &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </a>
 
-                                <button @click.prevent="checkout" v-if="authenticated" class="button success">
-                                Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                <span v-if="authenticated">
+                                <button @click.prevent="checkout"  class="button success">
+                                Pay With Card &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
                                 </button>
+
+                                <span id="paypalBtn"></span>
+                                <span id="paypalInfo" data-app-env="{{ $_ENV['APP_ENV'] }}"
+                                 data-app-baseurl= "{{$_ENV['APP_URL']}}"></span>
+
+                                </span>
                                 <span v-else>
                                     <a href="/login" class="button success" >
                                          Checkout &nbsp;<i class="fa fa-credit-card-alt" aria-hidden="true"></i>

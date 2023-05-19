@@ -17,6 +17,8 @@
 <script async src="/js/all.js"></script>
 
 <?php echo $__env->yieldContent('stripe-checkout'); ?>
+
+<?php echo $__env->yieldContent('paypal-checkout'); ?>
 </body>
 </html>
 

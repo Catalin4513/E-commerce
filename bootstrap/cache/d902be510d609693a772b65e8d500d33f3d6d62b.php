@@ -15,8 +15,8 @@
   <li><a href="/admin/product/create" title="Add a new product"><i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Product</a></li>
   <li><a href="/admin/products" title="Manage product inventory"><i class="fa fa-edit fa-fw" aria-hidden="true"></i>&nbsp; Manage Products</a></li>
   <li><a href="/admin/product/categories" title="View product categories"><i class="fa fa-compress" aria-hidden="true"></i>&nbsp; Categories</a></li>
-  <li><a href="/admin/users/orders" title="View order history"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; View Orders</a></li>
-  <li><a href="/admin/users/payments" title="View payment history"><i class="fa fa-money fa-fw" aria-hidden="true"></i>&nbsp; Payments</a></li>
+  <li><a href="/admin/transactions/orders" title="View order history"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; View Orders</a></li>
+  <li><a href="/admin/transactions/payments" title="View payment history"><i class="fa fa-money fa-fw" aria-hidden="true"></i>&nbsp; Payments</a></li>
   <li><a href="/logout" title="Log out of admin panel"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>&nbsp; Logout</a></li>
 </ul>
 

@@ -37,5 +37,14 @@ class ProductController extends BaseController
     exit; 
     }
 
+
+
+    public function showAll()
+    {
+       
+        $token = CSRFToken::_token();
+        return view('products', compact('token'));
+    }
+
  
 }

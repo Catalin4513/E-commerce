@@ -62,3 +62,16 @@ $router->map('POST','/admin/product/edit',
 
 $router->map('POST','/admin/product/[i:id]/delete',
 'App\controllers\admin\ProductController@delete','delete_product');
+
+
+$router->map('GET','/admin/transactions/orders',
+'App\controllers\admin\OrderController@show','dashboard_transactions_orders');
+
+
+$router->map('GET','/admin/transactions/payments',
+'App\controllers\admin\PaymentController@show','dashboard_transactions_payment');
+
+$router->map('GET', '/admin/users',
+    'App\controllers\admin\UserController@show', 'show_users');
+
+$router->map('POST', '/admin/users/[i:id]/edit', 'App\controllers\admin\UserController@edit', 'edit_user_role');

@@ -3,3 +3,18 @@
     justify-content: space-between;
   }
   
+  .shopping_cart{
+
+    padding: 4rem;
+    
+  
+    @include breakpoint(small only){
+      padding: 4rem 0.3rem;
+    }
+  
+    table{
+      tr, td{
+        padding: 0.8rem;
+      }
+    }
+  }

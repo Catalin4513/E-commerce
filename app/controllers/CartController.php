@@ -8,23 +8,40 @@ use App\classes\CSRFToken;
 use App\classes\Mail;
 use App\classes\Redirect;
 use App\classes\Request;
+use App\classes\PayableTrait;
 use App\classes\Role;
 use App\classes\Session;
 use App\models\Order;
 use App\models\OrderDetail;
 use App\models\Payment;
 use App\models\Product;
+use GuzzleHttp\Client;
 use Stripe\Charge;
 use Stripe\Customer;
 
+
 class CartController extends BaseController
 {
-    /*public function __construct()
-    {
-        if(!Role::middleware('user') || !Role::middleware('admin')){
-            Redirect::to('/login');
+    use PayableTrait;
+    protected $paypal_base_url;
+    
+    public function __construct(){
+        if ($_ENV['APP_ENV'] !== 'production'){
+            $this->paypal_base_url = 'https://api.sandbox.paypal.com/v1';
+        }else{
+            $this->paypal_base_url = 'https://api.paypal.com/v1';
         }
-    }*/
+    }
+
+
+    public function emptyCart()
+    {
+
+            Cart::clear();
+            echo json_encode(['success' => "All Products Removed From Cart!"]);
+            exit;
+
+    }
     public function show()
     {
         return view('cart');
@@ -150,9 +167,7 @@ class CartController extends BaseController
     {
       if(Request::has('post'))
       {
-          $result['product'] = array();
-          $result['order_no'] = array();
-          $result['total'] = array();
+          
           $request = Request::get('post');
           $token = $request->stripeToken;
           $email = $request->stripeEmail;
@@ -170,62 +185,9 @@ class CartController extends BaseController
                   'description' => user()->fullname.'-cart purchase',
                   'currency' => 'usd'
               ]);
-              $order_id = strtoupper(uniqid());
               
-              foreach ($_SESSION['user_cart'] as $cart_items){
-                  $productId = $cart_items['product_id'];
-                  $quantity = $cart_items['quantity'];
-                  $item = Product::where('id', $productId)->first();
-        
-                  if(!$item) { continue; }
-        
-                  $totalPrice = $item->price * $quantity;
-                  $totalPrice = number_format($totalPrice, 2);
-                  
-                  //store info
-                  OrderDetail::create([
-                      'user_id' => user()->id,
-                      'product_id' => $productId,
-                      'unit_price' => $item->price,
-                      'status' => 'Pending',
-                      'quantity' => $quantity,
-                      'total' => $totalPrice,
-                      'order_no' => $order_id
-                  ]);
-                  
-                  $item->quantity = $item->quantity - $quantity;
-                  $item->save();
-                  
-                  array_push($result['product'], [
-                      'name' => $item->name,
-                      'price' => $item->price,
-                      'total' => $totalPrice,
-                      'quantity' => $quantity
-                  ]);
-              }
-    
-              Order::create([
-                  'user_id' => user()->id,
-                  'order_no' => $order_id
-              ]);
               
-              Payment::create([
-                  'user_id' => user()->id,
-                  'amount' => $charge->amount,
-                  'status' => $charge->status,
-                  'order_no' => $order_id
-              ]);
-              $result['order_no'] = $order_id;
-              $result['total'] = Session::get('cartTotal');
-              
-              $data = [
-                  'to' => user()->email,
-                  'subject' => 'Order Confirmation',
-                  'view' => 'purchase',
-                  'name' => user()->fullname,
-                  'body' => $result
-              ];
-              (new Mail())->send($data);
+              $this->logPaymentAndMailClient('stripe', $charge);
               
           }catch (\Exception $ex){
                 echo $ex->getMessage();
@@ -235,6 +197,101 @@ class CartController extends BaseController
           echo json_encode([
               'success' => 'Thank you, we have received your payment and now processing your order.'
           ]);
+          exit;
       }
+    }
+
+    public function paypalCreatePayment(){
+        $client = new Client;
+
+        $accessTokenRequest = $client->post("{$this->paypal_base_url}/oauth2/token",[
+            'headers' => [
+                'Accept' => 'application/json'
+            ],
+            'auth' => [$_ENV['PAYPAL_CLIENT_ID'], $_ENV['PAYPAL_SECRET']],
+            'form_params' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ]);
+
+        $token = json_decode($accessTokenRequest->getBody());
+        
+        $bearer_token = $token->access_token;
+        Session::add('paypal_access_token', $bearer_token);
+        $app_base_url = $_ENV['APP_URL'];
+        $order_number = uniqid();
+        $payload = [
+            "intent" => "sale",
+            "payer" =>[
+              "payment_method" => "paypal"
+            ],
+            "redirect_urls" => [
+                "return_url" => "{$app_base_url}/cart",
+                "cancel_url" => "{$app_base_url}/cart"
+            ],
+            "transactions" => [
+                [
+                    "amount" => [
+                        "total" => Session::get('cartTotal'),
+                        "currency" => "USD",
+                        "details" => [
+                            "subtotal" => Session::get('cartTotal'),
+                        ]
+                    ],
+                    "description" => "Purchase from Ecommerce Store",
+                    "custom" => $order_number,
+                    "payment_options" => [
+                        "allowed_payment_method" => "INSTANT_FUNDING_SOURCE"
+                    ]
+                ]
+            ]
+        ];
+
+        $response = $client->post("{$this->paypal_base_url}/payments/payment", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $bearer_token
+            ],
+            "body" => json_encode($payload)
+        ]);
+
+        $response = json_decode($response->getBody());
+     
+        echo json_encode($response);
+
+    }
+
+
+    public function paypalExecutePayment(){
+
+
+        $request = Request::get('post');
+        $payer_id = $request->payerId;
+        $payment_id = $request->paymentId;
+        $payment_path = "payments/payment/{$payment_id}/execute";
+        $accessToken = Session::get('paypal_access_token');
+        
+        $paymentResponse = (new Client)->post($this->paypal_base_url."/{$payment_path}", [
+            "headers" => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer '.$accessToken
+            ],
+            "body" => json_encode(['payer_id' => $payer_id])
+        ]);
+        $response = json_decode($paymentResponse->getBody(), true);
+
+        
+        try{
+            
+            $this->logPaymentAndMailClient('paypal', $response);
+            Cart::clear();
+            echo json_encode([
+                'success' => 'Thank you, we have received your payment and now processing your order.'
+            ]);
+        
+        }catch (\Exception $ex){
+           echo $ex->getMessage();
+        }
+       
     }
 }

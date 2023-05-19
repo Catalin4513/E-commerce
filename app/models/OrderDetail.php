@@ -16,6 +16,7 @@ class OrderDetail extends Model {
     protected $fillable = ['user_id', 'order_no', 'product_id','quantity', 'unit_price', 'status', 'total'];
 
     protected $dates = ['deleted_at'];
+    
 
 
 

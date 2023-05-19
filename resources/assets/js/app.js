@@ -21,5 +21,6 @@ require('../../assets/js/pages/slider');
 require('../../assets/js/pages/product_details')
 require('../../assets/js/pages/lib');
 require('../../assets/js/pages/cart');
+require('../../assets/js/pages/products');
 
 

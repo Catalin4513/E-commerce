@@ -9147,7 +9147,23 @@ p {
           justify-content: space-between;
 }
 
+.shopping_cart {
+  padding: 4rem;
+}
+
+@media print, screen and (max-width: 39.99875em) {
+  .shopping_cart {
+    padding: 4rem 0.3rem;
+  }
+}
+
+.shopping_cart table tr,
+.shopping_cart table td {
+  padding: 0.8rem;
+}
+
 .auth {
+  padding: 6rem !important;
   padding-top: 5rem;
 }
 

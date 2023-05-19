@@ -17,7 +17,7 @@
                         <li><a :href="'/product/category/'+ category.slug">
                             @{{ category.name }}</a>
                         </li>
-                        <li><a :href="'/product/csubategory/'+ subCategory.slug">
+                        <li><a :href="'/product/category/'+ category.slug + '/'+subCategory.slug  ">
                             @{{ subCategory.name }}</a>
                         </li>
                         <li>@{{ product.name }}</li>

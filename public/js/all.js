@@ -11941,7 +11941,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(49);
+module.exports = __webpack_require__(51);
 
 
 /***/ }),
@@ -11964,12 +11964,13 @@ __webpack_require__(40);
 __webpack_require__(41);
 __webpack_require__(42);
 __webpack_require__(43);
-__webpack_require__(55);
 __webpack_require__(44);
 __webpack_require__(45);
 __webpack_require__(46);
 __webpack_require__(47);
 __webpack_require__(48);
+__webpack_require__(49);
+__webpack_require__(50);
 
 /***/ }),
 /* 13 */
@@ -45749,8 +45750,8 @@ return src;
         global: {},
         admin: {},
         homeslider: {},
-        product: {}
-
+        product: {},
+        products: {}
     };
 })();
 
@@ -45778,6 +45779,11 @@ return src;
 
                 break;
 
+            case 'products':
+            case 'categories':
+                ACMESTORE.products.display();
+                break;
+
             case 'cart':
                 ACMESTORE.product.cart();
 
@@ -45786,6 +45792,10 @@ return src;
             case 'adminProduct':
                 ACMESTORE.admin.changeEvent();
                 ACMESTORE.admin.delete();
+                break;
+
+            case 'adminUsers':
+                ACMESTORE.admin.update();
                 break;
 
             case 'adminDashboard':
@@ -45817,9 +45827,7 @@ return src;
     ACMESTORE.admin.update = function () {
 
         //update product category
-
         $(".update-category").on('click', function (e) {
-
             var token = $(this).data('token');
             var id = $(this).attr('id');
             var name = $("#item-name-" + id).val();
@@ -45828,35 +45836,28 @@ return src;
                 type: 'POST',
                 url: '/admin/product/categories/' + id + '/edit',
                 data: { token: token, name: name },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 success: function success(data) {
                     var response = jQuery.parseJSON(data);
-                    $(".notification").css("display", 'block').removeClass("alert").addClass("primary").delay(4000).slideUp(300).html(response.success);
+                    $(".notification").css("display", 'block').removeClass('alert').addClass('primary').delay(4000).slideUp(300).html(response.success);
                 },
                 error: function error(request, _error) {
                     var errors = jQuery.parseJSON(request.responseText);
                     var ul = document.createElement('ul');
-
                     $.each(errors, function (key, value) {
-
                         var li = document.createElement('li');
-
                         li.appendChild(document.createTextNode(value));
                         ul.appendChild(li);
                     });
-
                     $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
                 }
-
             });
+
             e.preventDefault();
         });
 
-        //////////////////////////////////////////////////////////////////////////////////////
-
         //update subcategory
-
         $(".update-subcategory").on('click', function (e) {
-
             var token = $(this).data('token');
             var id = $(this).attr('id');
             var category_id = $(this).data('category-id');
@@ -45864,7 +45865,6 @@ return src;
             var selected_category_id = $('#item-category-' + category_id + ' option:selected').val();
 
             if (category_id !== selected_category_id) {
-
                 category_id = selected_category_id;
             }
 
@@ -45872,27 +45872,52 @@ return src;
                 type: 'POST',
                 url: '/admin/product/subcategory/' + id + '/edit',
                 data: { token: token, name: name, category_id: category_id },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 success: function success(data) {
                     var response = jQuery.parseJSON(data);
-                    $(".notification").css("display", 'block').removeClass("alert").addClass("primary").delay(4000).slideUp(300).html(response.success);
+                    $(".notification").css("display", 'block').removeClass('alert').addClass('primary').delay(4000).slideUp(300).html(response.success);
                 },
                 error: function error(request, _error2) {
                     var errors = jQuery.parseJSON(request.responseText);
                     var ul = document.createElement('ul');
-
                     $.each(errors, function (key, value) {
-
                         var li = document.createElement('li');
-
                         li.appendChild(document.createTextNode(value));
                         ul.appendChild(li);
                     });
-
                     $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
                 }
-
             });
+
             e.preventDefault();
+        });
+
+        $(".update-role").on('click', function (e) {
+            e.preventDefault();
+
+            var token = $(this).data('token');
+            var id = $(this).attr('id').replace('update-role-', '');
+            var role = $('#item-' + id + ' option:selected').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/users/' + id + '/edit',
+                data: { token: token, role: role },
+                success: function success(data) {
+                    var response = jQuery.parseJSON(data);
+                    $(".notification").css("display", 'block').removeClass('alert').addClass('primary').delay(4000).slideUp(300).html(response.success);
+                },
+                error: function error(request, _error3) {
+                    var errors = jQuery.parseJSON(request.responseText);
+                    var ul = document.createElement('ul');
+                    $.each(errors, function (key, value) {
+                        var li = document.createElement('li');
+                        li.appendChild(document.createTextNode(value));
+                        ul.appendChild(li);
+                    });
+                    $(".notification").css("display", 'block').removeClass('primary').addClass('alert').delay(6000).slideUp(300).html(ul);
+                }
+            });
         });
     };
 })();
@@ -45999,289 +46024,6 @@ return src;
 
 /***/ }),
 /* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {(function () {
-    'use strict';
-
-    ACMESTORE.homeslider.homePageProducts = function () {
-        var app = new Vue({
-            el: '#root',
-            data: {
-                featured: [],
-                products: [],
-                count: 0,
-                loading: false
-            },
-            methods: {
-                getFeaturedProducts: function getFeaturedProducts() {
-                    this.loading = true;
-                    axios.all([axios.get('/featured'), axios.get('/get-products')]).then(axios.spread(function (featuredResponse, productsResponse) {
-                        app.featured = featuredResponse.data.featured;
-                        app.products = productsResponse.data.products;
-                        app.count = productsResponse.data.count;
-                        app.loading = false;
-                    }));
-                },
-                stringLimit: function stringLimit(string, value) {
-                    return ACMESTORE.module.truncateString(string, value);
-                },
-                addToCart: function addToCart(id) {
-                    ACMESTORE.module.addItemToCart(id, function (message) {
-                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
-                    });
-                },
-                loadMoreProducts: function loadMoreProducts() {
-                    var token = $('.display-products').data('token');
-                    this.loading = true;
-                    var data = $.param({ next: 2, token: token, count: app.count });
-                    axios.post('/load-more', data).then(function (response) {
-                        app.products = response.data.products;
-                        app.count = response.data.count;
-                        app.loading = false;
-                    });
-                }
-            },
-            created: function created() {
-                this.getFeaturedProducts();
-            },
-            mounted: function mounted() {
-                $(window).scroll(function () {
-                    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
-                        app.loadMoreProducts();
-                    }
-                });
-            }
-        });
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {(function () {
-    'use strict';
-
-    ACMESTORE.homeslider.initCarousel = function () {
-        $('.hero-slider').slick({
-            slidesToShow: 1,
-            autoplay: true,
-            arrows: false,
-            dots: false,
-            fade: true,
-            autoplayHoverPause: true,
-            slideToScroll: 1
-        });
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
-    Axios = _require.default;
-
-(function () {
-    'use strict';
-
-    ACMESTORE.product.details = function () {
-
-        var app = new Vue({
-            el: '#product',
-            data: {
-                product: [],
-                category: [],
-                subCategory: [],
-                similarProducts: [],
-                productId: $('#product').data('id'),
-                loading: false
-            },
-            methods: {
-                getProductDetails: function getProductDetails() {
-                    this.loading = true;
-                    setTimeout(function () {
-                        axios.get('/product-details/' + app.productId).then(function (response) {
-                            app.product = response.data.product;
-                            app.category = response.data.category;
-                            app.subCategory = response.data.subCategory;
-                            app.similarProducts = response.data.similarProducts;
-                            app.loading = false;
-                        });
-                    }, 1000);
-                },
-                stringLimit: function stringLimit(string, value) {
-                    return ACMESTORE.module.truncateString(string, value);
-                },
-                addToCart: function addToCart(id) {
-                    ACMESTORE.module.addItemToCart(id, function (message) {
-                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
-                    });
-                }
-            },
-            created: function created() {
-                this.getProductDetails();
-            }
-        });
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
-    Axios = _require.default;
-
-(function () {
-    'use strict';
-
-    ACMESTORE.module = {
-
-        truncateString: function limit(string, value) {
-            if (string.length > value) {
-                return string.substring(0, value) + '...';
-            } else {
-                return string;
-            }
-        },
-        addItemToCart: function addItemToCart(id, callback) {
-            var token = $('.display-products').data('token');
-
-            if (token == null || !token) {
-                token = $('.product').data('token');
-            }
-
-            var postData = $.param({ product_id: id, token: token });
-            axios.post('/cart', postData).then(function (response) {
-                callback(response.data.success);
-            });
-        }
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {(function () {
-    'use strict';
-
-    ACMESTORE.product.cart = function () {
-
-        var Stripe = StripeCheckout.configure({
-
-            key: $('#properties').data('stripe-key'),
-            locale: "auto",
-            image: "https://files.stripe.com/links/MDB8YWNjdF8xTjhlOWJEQnlqQno0Y1NrfGZsX2xpdmVfRm14UmJpYlA5b2pEdWhFRW0wSG1PSkg000wrDwcUNw",
-            token: function token(_token) {
-
-                var data = $.param({ stripeToken: _token.id, stripeEmail: _token.email });
-                axios.post('cart/payment', data).then(function (response) {
-                    $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
-                    app.displayItems(200);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            }
-
-        });
-
-        var app = new Vue({
-            el: '#shopping_cart',
-            data: {
-                items: [],
-                cartTotal: 0,
-                loading: false,
-                fail: false,
-                authenticated: false,
-                message: '',
-                amountInCents: 0
-            },
-            methods: {
-
-                displayItems: function displayItems(time) {
-
-                    this.loading = true;
-                    setTimeout(function () {
-                        axios.get('/cart/items').then(function (response) {
-
-                            if (response.data.fail) {
-                                app.fail = true;
-                                app.message = response.data.fail;
-                                app.loading = false;
-                            } else {
-                                app.items = response.data.items;
-                                app.cartTotal = response.data.cartTotal;
-                                app.loading = false;
-                                app.authenticated = response.data.authenticated;
-                                app.amountInCents = response.data.amountInCents;
-                            }
-                        });
-                    }, time);
-                },
-                updateQuantity: function updateQuantity(product_id, operator) {
-                    var postData = $.param({ product_id: product_id, operator: operator });
-                    axios.post('/cart/update-qty', postData).then(function (response) {
-
-                        app.displayItems(200);
-                    });
-                },
-                removeItem: function removeItem(index) {
-                    var postData = $.param({ item_index: index });
-                    axios.post('/cart/remove-item', postData).then(function (response) {
-                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
-                        app.displayItems(200);
-                    });
-                },
-
-                removeAll: function removeAll() {
-
-                    axios.post('/cart/remove-all').then(function (response) {
-                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
-                        app.displayItems();
-                    });
-                },
-
-                checkout: function checkout() {
-
-                    Stripe.open({
-                        name: "MYSTORE",
-                        description: " Shopping Cart Items",
-                        email: $('#properties').data('customer-email'),
-                        amount: app.amountInCents,
-                        zipCode: true
-                    });
-                }
-
-            },
-            created: function created() {
-
-                this.displayItems(2000);
-            }
-        });
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */
 /***/ (function(module, exports) {
 
 (function () {
@@ -46337,6 +46079,388 @@ return src;
         });
     }
 })();
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {(function () {
+    'use strict';
+
+    ACMESTORE.homeslider.homePageProducts = function () {
+        var app = new Vue({
+            el: '#root',
+            data: {
+                featured: [],
+                products: [],
+                count: 0,
+                loading: false
+            },
+            methods: {
+                getFeaturedProducts: function getFeaturedProducts() {
+                    this.loading = true;
+                    axios.all([axios.get('/featured'), axios.get('/get-products')]).then(axios.spread(function (featuredResponse, productsResponse) {
+                        app.featured = featuredResponse.data.featured;
+                        app.products = productsResponse.data.products;
+                        app.count = productsResponse.data.count;
+                        app.loading = false;
+                    }));
+                },
+                stringLimit: function stringLimit(string, value) {
+                    return ACMESTORE.module.truncateString(string, value);
+                },
+                addToCart: function addToCart(id) {
+                    ACMESTORE.module.addItemToCart(id, function (message) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
+                    });
+                },
+                loadMoreProducts: function loadMoreProducts() {
+                    var token = $('.display-products').data('token');
+                    this.loading = true;
+                    var postdata = { next: 2, token: token, count: this.count };
+                    ACMESTORE.module.loadMore('/load-more', postdata, function (response) {
+                        app.products = response.products;
+                        app.count = response.count;
+                        app.loading = false;
+                    });
+                }
+            },
+            created: function created() {
+                this.getFeaturedProducts();
+            },
+            mounted: function mounted() {
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+                        app.loadMoreProducts();
+                    }
+                });
+            }
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {(function () {
+    'use strict';
+
+    ACMESTORE.homeslider.initCarousel = function () {
+        $('.hero-slider').slick({
+            slidesToShow: 1,
+            autoplay: true,
+            arrows: false,
+            dots: false,
+            fade: true,
+            autoplayHoverPause: true,
+            slideToScroll: 1
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
+    Axios = _require.default;
+
+(function () {
+    'use strict';
+
+    ACMESTORE.product.details = function () {
+
+        var app = new Vue({
+            el: '#product',
+            data: {
+                product: [],
+                category: [],
+                subCategory: [],
+                similarProducts: [],
+                productId: $('#product').data('id'),
+                loading: false
+            },
+            methods: {
+                getProductDetails: function getProductDetails() {
+                    this.loading = true;
+                    setTimeout(function () {
+                        axios.get('/product-details/' + app.productId).then(function (response) {
+                            app.product = response.data.product;
+                            app.category = response.data.category;
+                            app.subCategory = response.data.subCategory;
+                            app.similarProducts = response.data.similarProducts;
+                            app.loading = false;
+                        });
+                    }, 1000);
+                },
+                stringLimit: function stringLimit(string, value) {
+                    return ACMESTORE.module.truncateString(string, value);
+                },
+                addToCart: function addToCart(id) {
+                    ACMESTORE.module.addItemToCart(id, function (message) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
+                    });
+                }
+            },
+            created: function created() {
+                this.getProductDetails();
+            }
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {var _require = __webpack_require__(3),
+    Axios = _require.default;
+
+(function () {
+    'use strict';
+
+    ACMESTORE.module = {
+
+        truncateString: function limit(string, value) {
+            if (string.length > value) {
+                return string.substring(0, value) + '...';
+            } else {
+                return string;
+            }
+        },
+        addItemToCart: function addItemToCart(id, callback) {
+            var token = $('.display-products').data('token');
+
+            if (token == null || !token) {
+                token = $('.product').data('token');
+            }
+
+            var postData = $.param({ product_id: id, token: token });
+            axios.post('/cart', postData).then(function (response) {
+                callback(response.data.success);
+            });
+        },
+        loadMore: function loadMore(endpoint, $postData, callback) {
+            var postdata = $.param($postData);
+            axios.post(endpoint, postdata).then(function (response) {
+                callback(response.data);
+            });
+        }
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {(function () {
+    'use strict';
+
+    ACMESTORE.product.cart = function () {
+
+        var Stripe = StripeCheckout.configure({
+            key: $('#properties').data('stripe-key'),
+            locale: "auto",
+            image: "https://s3.amazonaws.com/stripe-uploads/acct_1AFi4XD6RN5QLHpHmerchant-icon-1496449193909-logo.PNG",
+            token: function token(_token) {
+                var data = $.param({ stripeToken: _token.id, stripeEmail: _token.email });
+                axios.post('/cart/payment', data).then(function (response) {
+                    $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
+                    app.displayItems(200);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        });
+
+        var app = new Vue({
+            el: '#shopping_cart',
+            data: {
+                items: [],
+                cartTotal: 0,
+                loading: false,
+                fail: false,
+                authenticated: false,
+                message: '',
+                amountInCents: 0
+            },
+            methods: {
+                displayItems: function displayItems(time) {
+                    this.loading = true;
+                    setTimeout(function () {
+                        axios.get('/cart/items').then(function (response) {
+                            if (response.data.fail) {
+                                app.fail = true;
+                                app.message = response.data.fail;
+                                app.loading = false;
+                            } else {
+                                app.items = response.data.items;
+                                app.cartTotal = response.data.cartTotal;
+                                app.loading = false;
+                                app.authenticated = response.data.authenticated;
+                                app.amountInCents = response.data.amountInCents;
+
+                                if (app.items.length > 0) {
+                                    app.paypalCheckout();
+                                }
+                            }
+                        });
+                    }, time);
+                },
+                updateQuantity: function updateQuantity(product_id, operator) {
+                    var postData = $.param({ product_id: product_id, operator: operator });
+                    axios.post('/cart/update-qty', postData).then(function (response) {
+                        app.displayItems(10);
+                    });
+                },
+                removeItem: function removeItem(index) {
+                    var postData = $.param({ item_index: index });
+                    axios.post('/cart/remove-item', postData).then(function (response) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
+                        app.displayItems(10);
+                    });
+                },
+                checkout: function checkout() {
+                    Stripe.open({
+                        name: "MyStore, Inc.",
+                        description: "Shopping Cart Items",
+                        email: $('#properties').data('customer-email'),
+                        amount: app.amountInCents,
+                        zipCode: true,
+                        currency: 'USD'
+                    });
+                },
+                paypalCheckout: function paypalCheckout() {
+                    setTimeout(function () {
+                        var payPalInfo = $('#paypalInfo');
+                        var baseUrl = payPalInfo.data('app-baseurl');
+                        var environment = payPalInfo.data('app-env');
+                        var env = 'sandbox';
+
+                        if (environment === 'production') {
+                            env = 'production';
+                        }
+
+                        var CREATE_PAYMENT_ROUTE = baseUrl + '/paypal/create-payment';
+                        var CREATE_PAYMENT_EXECUTE_ROUTE = baseUrl + '/paypal/execute-payment';
+
+                        paypal.Button.render({
+                            env: env,
+
+                            commit: true, // Show a 'Pay Now' button
+
+                            style: {
+                                color: 'gold',
+                                size: 'small'
+                            },
+
+                            payment: function payment(data) {
+                                return paypal.request.post(CREATE_PAYMENT_ROUTE).then(function (data) {
+                                    return data.id;
+                                });
+                            },
+
+                            onAuthorize: function onAuthorize(data) {
+                                return paypal.request.post(CREATE_PAYMENT_EXECUTE_ROUTE, { paymentId: data.paymentID, payerId: data.payerID }).then(function (response) {
+                                    $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.success);
+                                    app.displayItems(10);
+                                });
+                            }
+                        }, '#paypalBtn');
+                    }, 10);
+                },
+                emptyCart: function emptyCart() {
+                    axios.post('/cart/empty').then(function (response) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(response.data.success);
+                        app.displayItems(10);
+                    });
+                }
+            },
+            created: function created() {
+                this.displayItems(1000);
+            },
+            mounted: function mounted() {
+                if (this.items.length > 0) {
+                    this.paypalCheckout();
+                }
+            }
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {(function () {
+    'use strict';
+
+    ACMESTORE.products.display = function () {
+        var app = new Vue({
+            el: '#root',
+            data: {
+                products: [],
+                count: 0,
+                loading: false,
+                next: 8,
+                targetElement: $('.display-products'),
+                loadMoreEndpoint: '/products/category/load-more'
+            },
+            methods: {
+                stringLimit: function stringLimit(string, value) {
+                    return ACMESTORE.module.truncateString(string, value);
+                },
+                addToCart: function addToCart(id) {
+                    ACMESTORE.module.addItemToCart(id, function (message) {
+                        $(".notify").css("display", 'block').delay(4000).slideUp(300).html(message);
+                    });
+                },
+                loadMoreProducts: function loadMoreProducts() {
+                    var token = this.targetElement.data('token');
+                    var urlParams = this.targetElement.data('urlparams');
+                    this.loading = true;
+                    var postData = { next: this.next, token: token, count: this.count };
+
+                    if (typeof urlParams !== 'undefined' && urlParams) {
+                        postData.slug = urlParams.slug;
+                        if (typeof urlParams.subcategory !== 'undefined') {
+                            postData.subcategory = urlParams.subcategory;
+                        }
+                    }
+                    ACMESTORE.module.loadMore(this.loadMoreEndpoint, postData, function (response) {
+                        app.products = response.products;
+                        app.count = response.count;
+                        app.loading = false;
+                        app.next += 2;
+                    });
+                }
+            },
+            created: function created() {
+                this.loadMoreProducts();
+            },
+            mounted: function mounted() {
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+                        app.loadMoreProducts();
+                    }
+                });
+            }
+        });
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
